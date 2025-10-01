@@ -147,6 +147,7 @@ class PostsService {
 
     async getPostsByAuthorId(authorId, page = 1, limit = 10) {
         this.checkIdParam(authorId);
+        await userServices.getUsersById(authorId);
         const offset = (page - 1) * limit;
         const {count, rows} = await PostsModel.findAndCountAll({
             where: {authorId: authorId},
