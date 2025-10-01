@@ -5,9 +5,10 @@ const doc = {
         title: 'CMS API',
         description: 'EndPoints for CMS API',
     },
-    host: 'e8207d986c0f.ngrok-free.app',
+    // host: 'e8207d986c0f.ngrok-free.app',
+    host: 'localhost:8080',
     basePath: '/api/v1',
-    schemes: ['https'], // or https
+    schemes: ['http'], // or https
     // securityDefinitions: {
     //     apiTokenAuth: {
     //         type: 'apiKey',

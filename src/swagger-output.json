@@ -5,7 +5,7 @@
     "description": "EndPoints for CMS API",
     "version": "1.0.0"
   },
-  "host": "e8207d986c0f.ngrok-free.app",
+  "host": "localhost:8080",
   "basePath": "/api/v1",
   "tags": [
     {
@@ -22,7 +22,7 @@
     }
   ],
   "schemes": [
-    "https"
+    "http"
   ],
   "paths": {
     "/auth/register": {
