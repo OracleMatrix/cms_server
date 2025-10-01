@@ -6,6 +6,11 @@ router.get('/posts/:postId/',
     // #swagger.summary = 'Get post by ID'
     postsController.getPostById);
 
+router.get('/posts/all/posts',
+    // #swagger.tags = ['Posts']
+    // #swagger.summary = 'Get all posts'
+    postsController.getAllPosts);
+
 router.get('/posts/by/title/',
     // #swagger.tags = ['Posts']
     // #swagger.summary = 'Get post by Title'

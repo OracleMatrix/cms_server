@@ -166,6 +166,24 @@ class PostsService {
         }
     }
 
+    async getAllPosts(page = 1, limit = 10) {
+        const  offset = (page - 1) * limit;
+        const {count, rows} = await PostsModel.findAndCountAll({
+            limit,
+            offset,
+            order: [["createdAt", "DESC"]],
+        });
+        return {
+            data: rows,
+            pagination: {
+                total: count,
+                page,
+                limit,
+                totalPages: Math.ceil(count / limit),
+            }
+        }
+    }
+
     async createPost(authorId, body) {
         await this.checkIdParam(authorId);
         await this.checkBody(body);
