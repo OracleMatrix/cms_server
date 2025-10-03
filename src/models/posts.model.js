@@ -8,6 +8,10 @@ module.exports = (sequelize) => {
                 onDelete: 'CASCADE',
                 onUpdate: 'CASCADE',
             });
+            PostsModel.hasMany(models.comments, {
+                foreignKey: 'postId',
+                as: 'comments',
+            });
         }
     }
 
