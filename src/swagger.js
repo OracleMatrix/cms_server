@@ -33,6 +33,10 @@ const doc = {
         {
             name: 'Posts',
             description: 'Posts management',
+        },
+        {
+            name: 'Comments',
+            description: 'Comments management',
         }
     ]
 };
@@ -42,6 +46,7 @@ const endpointsFiles = [
     'src/routes/auth.routes.js',
     'src/routes/user.routes.js',
     'src/routes/post.routes.js',
+    'src/routes/comment.routes.js',
 ];
 
 swaggerAutogen(outputFile, endpointsFiles, doc);
