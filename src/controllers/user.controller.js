@@ -6,6 +6,7 @@ class UserController {
             const data = await userServices.getUsersById(req.params.userId);
             return res.status(200).send(data);
         } catch (error) {
+            console.error(`==================================\n${error}\n======================================`);
             return res.status(error.status || 500).send({message: error.message});
         }
     }
@@ -15,6 +16,7 @@ class UserController {
             const data = await userServices.getUserByEmail(req.query.email);
             return res.status(200).send(data);
         } catch (error) {
+            console.error(`==================================\n${error}\n======================================`);
             return res.status(error.status || 500).send({message: error.message});
         }
     }
@@ -25,6 +27,7 @@ class UserController {
             const data = await userServices.getAllUsers(parseInt(page) || 1, parseInt(limit) || 10);
             return res.status(200).send(data);
         } catch (error) {
+            console.error(`==================================\n${error}\n======================================`);
             return res.status(error.status || 500).send({message: error.message});
         }
     }
@@ -34,6 +37,7 @@ class UserController {
             await userServices.deleteUser(req.params.userId);
             return res.status(200).send({message: "User deleted successfully"});
         } catch (error) {
+            console.error(`==================================\n${error}\n======================================`);
             return res.status(error.status || 500).send({message: error.message});
         }
     }
@@ -43,6 +47,7 @@ class UserController {
             await userServices.updateUser(req.params.userId, req.body);
             return res.status(200).send({message: "User updated successfully"});
         } catch (error) {
+            console.error(`==================================\n${error}\n======================================`);
             return res.status(error.status || 500).send({message: error.message});
         }
     }
@@ -52,6 +57,7 @@ class UserController {
             await userServices.updatePassword(req.params.userId, req.body);
             return res.status(200).send({message: "Password updated successfully"});
         } catch (error) {
+            console.error(`==================================\n${error}\n======================================`);
             return res.status(error.status || 500).send({message: error.message});
         }
     }

@@ -6,6 +6,7 @@ class PostsController {
             const data = await postService.getPostById(req.params.postId);
             return res.status(200).send(data);
         } catch (error) {
+            console.error(`==================================\n${error}\n======================================`);
             return res.status(error.status || 500).send({message: error.message});
         }
     }
@@ -15,6 +16,7 @@ class PostsController {
             const data = await postService.getPostByTitle(req.query.title);
             return res.status(200).send(data);
         } catch (error) {
+            console.error(`==================================\n${error}\n======================================`);
             return res.status(error.status || 500).send({message: error.message});
         }
     }
@@ -30,6 +32,7 @@ class PostsController {
             );
             return res.status(200).send(data);
         } catch (error) {
+            console.error(`==================================\n${error}\n======================================`);
             return res.status(error.status || 500).send({message: error.message});
         }
     }
@@ -44,6 +47,7 @@ class PostsController {
             );
             return res.status(200).send(data);
         } catch (error) {
+            console.error(`==================================\n${error}\n======================================`);
             return res.status(error.status || 500).send({message: error.message});
         }
     }
@@ -59,6 +63,7 @@ class PostsController {
             );
             return res.status(200).send(data);
         } catch (error) {
+            console.error(`==================================\n${error}\n======================================`);
             return res.status(error.status || 500).send({message: error.message});
         }
     }
@@ -72,6 +77,7 @@ class PostsController {
             );
             return res.status(200).send(data);
         }  catch (error) {
+            console.error(`==================================\n${error}\n======================================`);
             return res.status(error.status || 500).send({message: error.message});
         }
     }
@@ -81,6 +87,7 @@ class PostsController {
             const data = await postService.createPost(req.params.authorId, req.body);
             return res.status(201).send({message: "Post created successfully", data});
         } catch (error) {
+            console.error(`==================================\n${error}\n======================================`);
             return res.status(error.status || 500).send({message: error.message});
         }
     }
@@ -90,6 +97,7 @@ class PostsController {
             await postService.updatePost(req.params.postId, req.body);
             return res.status(200).send({message: "Post updated successfully"});
         } catch (error) {
+            console.error(`==================================\n${error}\n======================================`);
             return res.status(error.status || 500).send({message: error.message});
         }
     }
@@ -99,6 +107,7 @@ class PostsController {
             await postService.deletePost(req.params.postId);
             return res.status(200).send({message: "Post deleted successfully"});
         } catch (error) {
+            console.error(`==================================\n${error}\n======================================`);
             return res.status(error.status || 500).send({message: error.message});
         }
     }

@@ -6,6 +6,7 @@ class AuthController {
             const data = await authServices.registerUser(req.body);
             res.status(201).send(data);
         } catch (error) {
+            console.error(`==================================\n${error}\n======================================`);
             res.status(error.status || 500).json({message: error.message});
         }
     }
@@ -15,6 +16,7 @@ class AuthController {
             const data = await authServices.loginUser(req.body);
             res.status(201).send(data);
         } catch (error) {
+            console.error(`==================================\n${error}\n======================================`);
             res.status(error.status || 500).json({message: error.message});
         }
     }
