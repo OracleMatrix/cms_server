@@ -1,6 +1,7 @@
 const Joi = require('joi');
 const db = require('../models');
 const PostsModel = db.posts;
+const UsersModel = db.users;
 const userServices = require('./users.service');
 
 class PostsService {
@@ -154,6 +155,13 @@ class PostsService {
             limit,
             offset,
             order: [["createdAt", "DESC"]],
+            include: [
+                {
+                    model: UsersModel,
+                    as: 'users',
+                    attributes: {exclude: ['passwordHash']}
+                },
+            ]
         });
         return {
             data: rows,
@@ -167,7 +175,7 @@ class PostsService {
     }
 
     async getAllPosts(page = 1, limit = 10) {
-        const  offset = (page - 1) * limit;
+        const offset = (page - 1) * limit;
         const {count, rows} = await PostsModel.findAndCountAll({
             limit,
             offset,
