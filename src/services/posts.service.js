@@ -91,7 +91,16 @@ class PostsService {
 
     async getPostByTitle(title) {
         this.checkParam(title);
-        const post = await PostsModel.findOne({where: {title: title}});
+        const post = await PostsModel.findOne({
+            where: {title: title},
+            include: [
+                {
+                    model: UsersModel,
+                    as: 'users',
+                    attributes: {exclude: ['passwordHash']},
+                }
+            ]
+        });
         if (!post) {
             const error = new Error('Post not found');
             error.status = 404;
@@ -110,6 +119,13 @@ class PostsService {
             limit,
             offset,
             order: [["createdAt", "DESC"]],
+            include: [
+                {
+                    model: UsersModel,
+                    as: 'users',
+                    attributes: {exclude: ['passwordHash']},
+                }
+            ]
         });
 
         return {
@@ -134,6 +150,13 @@ class PostsService {
             limit,
             offset,
             order: [["createdAt", "DESC"]],
+            include: [
+                {
+                    model: UsersModel,
+                    as: 'users',
+                    attributes: {exclude: ['passwordHash']},
+                }
+            ]
         });
         return {
             data: rows,
@@ -180,6 +203,13 @@ class PostsService {
             limit,
             offset,
             order: [["createdAt", "DESC"]],
+            include: [
+                {
+                    model: UsersModel,
+                    as: 'users',
+                    attributes: {exclude: ['passwordHash']}
+                }
+            ]
         });
         return {
             data: rows,
