@@ -40,6 +40,7 @@ class UsersService {
                 limit,
                 offset,
                 order: [["createdAt", "DESC"]],
+                attributes: {exclude: ['passwordHash']}
             }
         );
         return {
