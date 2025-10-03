@@ -1,7 +1,6 @@
 const Joi = require('joi');
 const db = require('../models');
 const PostsModel = db.posts;
-const UsersModel = db.users;
 const userServices = require('./users.service');
 
 class PostsService {
@@ -95,7 +94,7 @@ class PostsService {
             where: {title: title},
             include: [
                 {
-                    model: UsersModel,
+                    model: db.users,
                     as: 'users',
                     attributes: {exclude: ['passwordHash']},
                 }
@@ -121,7 +120,7 @@ class PostsService {
             order: [["createdAt", "DESC"]],
             include: [
                 {
-                    model: UsersModel,
+                    model: db.users,
                     as: 'users',
                     attributes: {exclude: ['passwordHash']},
                 }
@@ -152,7 +151,7 @@ class PostsService {
             order: [["createdAt", "DESC"]],
             include: [
                 {
-                    model: UsersModel,
+                    model: db.users,
                     as: 'users',
                     attributes: {exclude: ['passwordHash']},
                 }
@@ -180,7 +179,7 @@ class PostsService {
             order: [["createdAt", "DESC"]],
             include: [
                 {
-                    model: UsersModel,
+                    model: db.users,
                     as: 'users',
                     attributes: {exclude: ['passwordHash']}
                 },
@@ -205,7 +204,7 @@ class PostsService {
             order: [["createdAt", "DESC"]],
             include: [
                 {
-                    model: UsersModel,
+                    model: db.users,
                     as: 'users',
                     attributes: {exclude: ['passwordHash']}
                 }
