@@ -43,7 +43,19 @@ class CommentsService {
 
     async getCommentById(commentId) {
         this.checkIdParam(commentId);
-        const comment = await CommentsModel.findByPk(commentId);
+        const comment = await CommentsModel.findByPk(commentId, {
+            include: [
+                {
+                    model: db.users,
+                    as: 'users',
+                    attributes: {exclude: ['passwordHash']}
+                },
+                {
+                    model: db.posts,
+                    as: 'posts',
+                }
+            ]
+        });
         if (!comment) {
             const error = new Error('Comment not found');
             error.status = 404;
@@ -58,6 +70,17 @@ class CommentsService {
         const offset = (page - 1) * limit;
         const {count, rows} = await CommentsModel.findAndCountAll({
             where: {userId: userId},
+            include: [
+                {
+                    model: db.users,
+                    as: 'users',
+                    attributes: {exclude: ['passwordHash']}
+                },
+                {
+                    model: db.posts,
+                    as: 'posts',
+                }
+            ],
             offset,
             limit,
             order: [['createdAt', 'DESC']]
