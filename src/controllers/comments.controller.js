@@ -13,7 +13,7 @@ class CommentsController {
     async getCommentByUserId(req, res) {
         try {
             const {page, limit} = req.query;
-            const data = commentsService.getCommentsByUserId(req.params.userId, parseInt(page) || 1, parseInt(limit) || 10);
+            const data = await commentsService.getCommentsByUserId(req.params.userId, parseInt(page) || 1, parseInt(limit) || 10);
             return res.status(200).send(data);
         }  catch (error) {
             return res.status(error.status || 500).json({ message: error.message });
