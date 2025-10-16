@@ -79,7 +79,13 @@ class PostsService {
 
     async getPostById(postId) {
         this.checkIdParam(postId);
-        const post = await PostsModel.findByPk(postId);
+        const post = await PostsModel.findByPk(postId, {
+            include: [{
+                model: db.users,
+                as: 'users',
+                attributes: {exclude: ['passwordHash']}
+            }]
+        });
         if (!post) {
             const error = new Error('Post not found');
             error.status = 404;
