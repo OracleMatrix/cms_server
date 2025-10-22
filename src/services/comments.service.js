@@ -7,7 +7,7 @@ const Joi = require("joi");
 class CommentsService {
     checkIdParam(params) {
         const param = Joi.number().required();
-        const {error} = param.validate(params);
+        const { error } = param.validate(params);
         if (error) {
             const paramError = new Error(error.details[0].message);
             paramError.status = 400;
@@ -32,7 +32,7 @@ class CommentsService {
             content: Joi.string().required(),
         });
 
-        const {error} = bodySchema.validate(body);
+        const { error } = bodySchema.validate(body);
         if (error) {
             const bodyError = new Error(error.details[0].message);
             bodyError.status = 400;
@@ -48,7 +48,7 @@ class CommentsService {
                 {
                     model: db.users,
                     as: 'users',
-                    attributes: {exclude: ['passwordHash']}
+                    attributes: { exclude: ['passwordHash'] }
                 },
                 {
                     model: db.posts,
@@ -68,13 +68,13 @@ class CommentsService {
         this.checkIdParam(userId);
         await userServices.getUsersById(userId);
         const offset = (page - 1) * limit;
-        const {count, rows} = await CommentsModel.findAndCountAll({
-            where: {userId: userId},
+        const { count, rows } = await CommentsModel.findAndCountAll({
+            where: { userId: userId },
             include: [
                 {
                     model: db.users,
                     as: 'users',
-                    attributes: {exclude: ['passwordHash']}
+                    attributes: { exclude: ['passwordHash'] }
                 },
                 {
                     model: db.posts,
@@ -98,7 +98,7 @@ class CommentsService {
 
     async getAllComments(page = 1, limit = 10) {
         const offset = (page - 1) * limit;
-        const {count, rows} = await CommentsModel.findAndCountAll({
+        const { count, rows } = await CommentsModel.findAndCountAll({
             offset,
             limit,
             order: [['createdAt', 'DESC']],
@@ -112,6 +112,34 @@ class CommentsService {
                 totalPages: Math.ceil(count / limit),
             }
         }
+    }
+
+    async getCommentsByPostId(postId, page = 1, limit = 10) {
+        this.checkIdParam(postId);
+        await postServices.getPostById(postId);
+        const offset = (page - 1) * limit;
+        const { count, rows } = await CommentsModel.findAndCountAll({
+            where: { postId: postId },
+            include: [
+                {
+                    model: db.users,
+                    as: 'users',
+                    attributes: { exclude: ['passwordHash'] }
+                }
+            ],
+            offset,
+            limit,
+            order: [['createdAt', 'DESC']]
+        });
+        return {
+            data: rows,
+            pagination: {
+                total: count,
+                limit: limit,
+                page: page,
+                totalPages: Math.ceil(count / limit),
+            },
+        };
     }
 
     async createComment(userId, postId, data) {
@@ -131,7 +159,7 @@ class CommentsService {
     async deleteComment(commentId) {
         this.checkIdParam(commentId);
         await this.getCommentById(commentId);
-        return await CommentsModel.destroy({where: {id: commentId}});
+        return await CommentsModel.destroy({ where: { id: commentId } });
     }
 }
 

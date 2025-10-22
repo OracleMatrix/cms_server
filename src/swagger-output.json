@@ -810,6 +810,41 @@
         }
       }
     },
+    "/comments/of/post/{postId}": {
+      "get": {
+        "tags": [
+          "Comments"
+        ],
+        "summary": "Get comments by post ID",
+        "description": "",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/comment/create/{userId}/{postId}": {
       "post": {
         "tags": [

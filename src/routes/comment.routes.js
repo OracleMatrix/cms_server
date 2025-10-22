@@ -13,6 +13,12 @@ router.get('/comments/of/user/:userId',
     // #swagger.tags = ['Comments']
     // #swagger.summary = 'Get user comments by user ID'
     commentController.getCommentByUserId);
+
+router.get('/comments/of/post/:postId',
+    // #swagger.tags = ['Comments']
+    // #swagger.summary = 'Get comments by post ID'
+    commentController.getCommentsByPostId);
+
 router.post('/comment/create/:userId/:postId',
     // #swagger.tags = ['Comments']
     // #swagger.summary = 'Create new comment'
