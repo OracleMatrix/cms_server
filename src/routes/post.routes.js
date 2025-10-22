@@ -31,6 +31,16 @@ router.get('/posts/get/by/tag',
     // #swagger.summary = 'Get all of the posts with a tag'
     postsController.getPostsByTag);
 
+router.get('/posts/:authorId/drafts',
+    // #swagger.tags = ['Posts']
+    // #swagger.summary = 'Get all draft posts of an author by author ID'
+    postsController.getDraftPosts);
+
+router.get('/posts/:authorId/archived',
+    // #swagger.tags = ['Posts']
+    // #swagger.summary = 'Get all archived posts of an author by author ID'
+    postsController.getArchivedPosts);
+
 router.post('/posts/:authorId/create/',
     // #swagger.tags = ['Posts']
     // #swagger.summary = 'Create new post'

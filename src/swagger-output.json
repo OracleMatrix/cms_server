@@ -477,6 +477,76 @@
         }
       }
     },
+    "/posts/{authorId}/drafts": {
+      "get": {
+        "tags": [
+          "Posts"
+        ],
+        "summary": "Get all draft posts of an author by author ID",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/posts/{authorId}/archived": {
+      "get": {
+        "tags": [
+          "Posts"
+        ],
+        "summary": "Get all archived posts of an author by author ID",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/posts/{authorId}/create/": {
       "post": {
         "tags": [

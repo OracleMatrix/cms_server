@@ -1,12 +1,12 @@
-const Joi = require('joi');
-const db = require('../models');
+const Joi = require("joi");
+const db = require("../models");
 const PostsModel = db.posts;
-const userServices = require('./users.service');
+const userServices = require("./users.service");
 
 class PostsService {
     checkIdParam(params) {
         const param = Joi.number().required();
-        const {error} = param.validate(params);
+        const { error } = param.validate(params);
         if (error) {
             const paramError = new Error(error.details[0].message);
             paramError.status = 400;
@@ -17,7 +17,7 @@ class PostsService {
 
     checkParam(params) {
         const param = Joi.string().required();
-        const {error} = param.validate(params);
+        const { error } = param.validate(params);
         if (error) {
             const paramError = new Error(error.details[0].message);
             paramError.status = 400;
@@ -32,12 +32,12 @@ class PostsService {
             slug: Joi.string().required(),
             content: Joi.string().required(),
             excerpt: Joi.string().optional(),
-            status: Joi.valid('archived', 'published', 'draft').required(),
+            status: Joi.valid("archived", "published", "draft").required(),
             category: Joi.string().required(),
             tags: Joi.string().required(),
         });
 
-        const {error} = bodySchema.validate(body);
+        const { error } = bodySchema.validate(body);
         if (error) {
             const bodyError = new Error(error.details[0].message);
             bodyError.status = 400;
@@ -52,12 +52,12 @@ class PostsService {
             slug: Joi.string().optional(),
             content: Joi.string().optional(),
             excerpt: Joi.string().optional(),
-            status: Joi.valid('archived', 'published', 'draft').optional(),
+            status: Joi.valid("archived", "published", "draft").optional(),
             category: Joi.string().optional(),
             tags: Joi.string().optional(),
         });
 
-        const {error} = bodySchema.validate(body);
+        const { error } = bodySchema.validate(body);
         if (error) {
             const bodyError = new Error(error.details[0].message);
             bodyError.status = 400;
@@ -67,27 +67,28 @@ class PostsService {
     }
 
     async checkSlugExist(slug) {
-        const slugExists = await PostsModel.findOne({where: {slug: slug}});
+        const slugExists = await PostsModel.findOne({ where: { slug: slug } });
         if (slugExists) {
-            const error = new Error('Slug already exists');
+            const error = new Error("Slug already exists");
             error.status = 400;
             throw error;
         }
         return slugExists;
     }
 
-
     async getPostById(postId) {
         this.checkIdParam(postId);
         const post = await PostsModel.findByPk(postId, {
-            include: [{
-                model: db.users,
-                as: 'users',
-                attributes: {exclude: ['passwordHash']}
-            }]
+            include: [
+                {
+                    model: db.users,
+                    as: "users",
+                    attributes: { exclude: ["passwordHash"] },
+                },
+            ],
         });
         if (!post) {
-            const error = new Error('Post not found');
+            const error = new Error("Post not found");
             error.status = 404;
             throw error;
         }
@@ -97,17 +98,21 @@ class PostsService {
     async getPostByTitle(title) {
         this.checkParam(title);
         const post = await PostsModel.findOne({
-            where: {title: title},
+            where: {
+                title: title, status: {
+                    [db.Sequelize.Op.notIn]: ['draft', 'archived']
+                }
+            },
             include: [
                 {
                     model: db.users,
-                    as: 'users',
-                    attributes: {exclude: ['passwordHash']},
-                }
-            ]
+                    as: "users",
+                    attributes: { exclude: ["passwordHash"] },
+                },
+            ],
         });
         if (!post) {
-            const error = new Error('Post not found');
+            const error = new Error("Post not found");
             error.status = 404;
             throw error;
         }
@@ -119,38 +124,11 @@ class PostsService {
 
         const offset = (page - 1) * limit;
 
-        const {count, rows} = await PostsModel.findAndCountAll({
-            where: {category: category},
-            limit,
-            offset,
-            order: [["createdAt", "DESC"]],
-            include: [
-                {
-                    model: db.users,
-                    as: 'users',
-                    attributes: {exclude: ['passwordHash']},
-                }
-            ]
-        });
-
-        return {
-            data: rows,
-            pagination: {
-                total: count,
-                page,
-                limit,
-                totalPages: Math.ceil(count / limit),
-            }
-        };
-    }
-
-
-    async getPostsByTag(tag, page = 1, limit = 10) {
-        this.checkParam(tag);
-        const offset = (page - 1) * limit;
-        const {count, rows} = await PostsModel.findAndCountAll({
+        const { count, rows } = await PostsModel.findAndCountAll({
             where: {
-                tags: tag,
+                category: category, status: {
+                    [db.Sequelize.Op.notIn]: ['draft', 'archived']
+                }
             },
             limit,
             offset,
@@ -158,10 +136,43 @@ class PostsService {
             include: [
                 {
                     model: db.users,
-                    as: 'users',
-                    attributes: {exclude: ['passwordHash']},
+                    as: "users",
+                    attributes: { exclude: ["passwordHash"] },
+                },
+            ],
+        });
+
+        return {
+            data: rows,
+            pagination: {
+                total: count,
+                page,
+                limit,
+                totalPages: Math.ceil(count / limit),
+            },
+        };
+    }
+
+    async getPostsByTag(tag, page = 1, limit = 10) {
+        this.checkParam(tag);
+        const offset = (page - 1) * limit;
+        const { count, rows } = await PostsModel.findAndCountAll({
+            where: {
+                tags: tag,
+                status: {
+                    [db.Sequelize.Op.notIn]: ['draft', 'archived']
                 }
-            ]
+            },
+            limit,
+            offset,
+            order: [["createdAt", "DESC"]],
+            include: [
+                {
+                    model: db.users,
+                    as: "users",
+                    attributes: { exclude: ["passwordHash"] },
+                },
+            ],
         });
         return {
             data: rows,
@@ -170,26 +181,31 @@ class PostsService {
                 page,
                 limit,
                 totalPages: Math.ceil(count / limit),
-            }
-        }
+            },
+        };
     }
 
     async getPostsByAuthorId(authorId, page = 1, limit = 10) {
         this.checkIdParam(authorId);
         await userServices.getUsersById(authorId);
         const offset = (page - 1) * limit;
-        const {count, rows} = await PostsModel.findAndCountAll({
-            where: {authorId: authorId},
+        const { count, rows } = await PostsModel.findAndCountAll({
+            where: {
+                authorId: authorId,
+                status: {
+                    [db.Sequelize.Op.notIn]: ["draft", "archived"],
+                },
+            },
             limit,
             offset,
             order: [["createdAt", "DESC"]],
             include: [
                 {
                     model: db.users,
-                    as: 'users',
-                    attributes: {exclude: ['passwordHash']}
+                    as: "users",
+                    attributes: { exclude: ["passwordHash"] },
                 },
-            ]
+            ],
         });
         return {
             data: rows,
@@ -198,23 +214,28 @@ class PostsService {
                 page,
                 limit,
                 totalPages: Math.ceil(count / limit),
-            }
-        }
+            },
+        };
     }
 
     async getAllPosts(page = 1, limit = 10) {
         const offset = (page - 1) * limit;
-        const {count, rows} = await PostsModel.findAndCountAll({
+        const { count, rows } = await PostsModel.findAndCountAll({
+            where: {
+                status: {
+                    [db.Sequelize.Op.notIn]: ["draft", "archived"],
+                },
+            },
             limit,
             offset,
             order: [["createdAt", "DESC"]],
             include: [
                 {
                     model: db.users,
-                    as: 'users',
-                    attributes: {exclude: ['passwordHash']}
-                }
-            ]
+                    as: "users",
+                    attributes: { exclude: ["passwordHash"] },
+                },
+            ],
         });
         return {
             data: rows,
@@ -223,8 +244,64 @@ class PostsService {
                 page,
                 limit,
                 totalPages: Math.ceil(count / limit),
-            }
-        }
+            },
+        };
+    }
+
+    async getDraftPosts(authorId, page = 1, limit = 10) {
+        this.checkIdParam(authorId);
+        await userServices.getUsersById(authorId);
+        const offset = (page - 1) * limit;
+        const { count, rows } = await PostsModel.findAndCountAll({
+            where: { authorId: authorId, status: "draft" },
+            limit,
+            offset,
+            order: [["createdAt", "DESC"]],
+            include: [
+                {
+                    model: db.users,
+                    as: "users",
+                    attributes: { exclude: ["passwordHash"] },
+                },
+            ],
+        });
+        return {
+            data: rows,
+            pagination: {
+                total: count,
+                page,
+                limit,
+                totalPages: Math.ceil(count / limit),
+            },
+        };
+    }
+
+    async getArchivedPosts(authorId, page = 1, limit = 10) {
+        this.checkIdParam(authorId);
+        await userServices.getUsersById(authorId);
+        const offset = (page - 1) * limit;
+        const { count, rows } = await PostsModel.findAndCountAll({
+            where: { authorId: authorId, status: "archived" },
+            limit,
+            offset,
+            order: [["createdAt", "DESC"]],
+            include: [
+                {
+                    model: db.users,
+                    as: "users",
+                    attributes: { exclude: ["passwordHash"] },
+                },
+            ],
+        });
+        return {
+            data: rows,
+            pagination: {
+                total: count,
+                page,
+                limit,
+                totalPages: Math.ceil(count / limit),
+            },
+        };
     }
 
     async createPost(authorId, body) {
@@ -252,17 +329,20 @@ class PostsService {
         if (body.slug != null) {
             await this.checkSlugExist(body.slug);
         }
-        return PostsModel.update({
-            title: body.title,
-            slug: body.slug,
-            content: body.content,
-            excerpt: body.excerpt,
-            status: body.status,
-            category: body.category,
-            tags: body.tags,
-        }, {
-            where: {id: postId},
-        });
+        return PostsModel.update(
+            {
+                title: body.title,
+                slug: body.slug,
+                content: body.content,
+                excerpt: body.excerpt,
+                status: body.status,
+                category: body.category,
+                tags: body.tags,
+            },
+            {
+                where: { id: postId },
+            }
+        );
     }
 
     async deletePost(postId) {

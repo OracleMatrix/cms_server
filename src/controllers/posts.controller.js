@@ -7,7 +7,7 @@ class PostsController {
             return res.status(200).send(data);
         } catch (error) {
             console.error(`==================================\n${error}\n======================================`);
-            return res.status(error.status || 500).send({message: error.message});
+            return res.status(error.status || 500).send({ message: error.message });
         }
     }
 
@@ -17,14 +17,14 @@ class PostsController {
             return res.status(200).send(data);
         } catch (error) {
             console.error(`==================================\n${error}\n======================================`);
-            return res.status(error.status || 500).send({message: error.message});
+            return res.status(error.status || 500).send({ message: error.message });
         }
     }
 
     async getPostByAuthorId(req, res) {
         try {
-            const {authorId} = req.params;
-            const {page, limit} = req.query;
+            const { authorId } = req.params;
+            const { page, limit } = req.query;
             const data = await postService.getPostsByAuthorId(
                 authorId,
                 parseInt(page) || 1,
@@ -33,13 +33,13 @@ class PostsController {
             return res.status(200).send(data);
         } catch (error) {
             console.error(`==================================\n${error}\n======================================`);
-            return res.status(error.status || 500).send({message: error.message});
+            return res.status(error.status || 500).send({ message: error.message });
         }
     }
 
     async getPostsByCategory(req, res) {
         try {
-            const {category, page, limit} = req.query;
+            const { category, page, limit } = req.query;
             const data = await postService.getPostsByCategory(
                 category,
                 parseInt(page) || 1,
@@ -48,14 +48,14 @@ class PostsController {
             return res.status(200).send(data);
         } catch (error) {
             console.error(`==================================\n${error}\n======================================`);
-            return res.status(error.status || 500).send({message: error.message});
+            return res.status(error.status || 500).send({ message: error.message });
         }
     }
 
 
     async getPostsByTag(req, res) {
         try {
-            const {tag, page, limit} = req.query;
+            const { tag, page, limit } = req.query;
             const data = await postService.getPostsByTag(
                 tag,
                 parseInt(page) || 1,
@@ -64,51 +64,81 @@ class PostsController {
             return res.status(200).send(data);
         } catch (error) {
             console.error(`==================================\n${error}\n======================================`);
-            return res.status(error.status || 500).send({message: error.message});
+            return res.status(error.status || 500).send({ message: error.message });
         }
     }
 
     async getAllPosts(req, res) {
         try {
-            const {page, limit} = req.query;
+            const { page, limit } = req.query;
             const data = await postService.getAllPosts(
                 parseInt(page) || 1,
                 parseInt(limit) || 10,
             );
             return res.status(200).send(data);
-        }  catch (error) {
+        } catch (error) {
             console.error(`==================================\n${error}\n======================================`);
-            return res.status(error.status || 500).send({message: error.message});
+            return res.status(error.status || 500).send({ message: error.message });
+        }
+    }
+
+    async getDraftPosts(req, res) {
+        try {
+            const { page, limit } = req.query;
+            const data = await postService.getDraftPosts(
+                req.params.authorId,
+                parseInt(page) || 1,
+                parseInt(limit) || 10,
+            );
+            return res.status(200).send(data);
+        } catch (error) {
+            console.error(`==================================\n${error}\n======================================`);
+            return res.status(error.status || 500).send({ message: error.message });
+        }
+    }
+
+    async getArchivedPosts(req, res) {
+        try {
+            const { page, limit } = req.query;
+            const data = await postService.getArchivedPosts(
+                req.params.authorId,
+                parseInt(page) || 1,
+                parseInt(limit) || 10,
+            );
+            return res.status(200).send(data);
+        } catch (error) {
+            console.error(`==================================\n${error}\n======================================`);
+            return res.status(error.status || 500).send({ message: error.message });
         }
     }
 
     async createPost(req, res) {
         try {
             const data = await postService.createPost(req.params.authorId, req.body);
-            return res.status(201).send({message: "Post created successfully", data});
+            return res.status(201).send({ message: "Post created successfully", data });
         } catch (error) {
             console.error(`==================================\n${error}\n======================================`);
-            return res.status(error.status || 500).send({message: error.message});
+            return res.status(error.status || 500).send({ message: error.message });
         }
     }
 
     async updatePost(req, res) {
         try {
             await postService.updatePost(req.params.postId, req.body);
-            return res.status(200).send({message: "Post updated successfully"});
+            return res.status(200).send({ message: "Post updated successfully" });
         } catch (error) {
             console.error(`==================================\n${error}\n======================================`);
-            return res.status(error.status || 500).send({message: error.message});
+            return res.status(error.status || 500).send({ message: error.message });
         }
     }
 
     async deletePost(req, res) {
         try {
             await postService.deletePost(req.params.postId);
-            return res.status(200).send({message: "Post deleted successfully"});
+            return res.status(200).send({ message: "Post deleted successfully" });
         } catch (error) {
             console.error(`==================================\n${error}\n======================================`);
-            return res.status(error.status || 500).send({message: error.message});
+            return res.status(error.status || 500).send({ message: error.message });
         }
     }
 }
