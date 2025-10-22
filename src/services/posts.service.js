@@ -228,8 +228,8 @@ class PostsService {
     }
 
     async createPost(authorId, body) {
-        await this.checkIdParam(authorId);
-        await this.checkBody(body);
+        this.checkIdParam(authorId);
+        this.checkBody(body);
         await userServices.getUsersById(authorId);
         await this.checkSlugExist(body.slug);
 
@@ -246,11 +246,12 @@ class PostsService {
     }
 
     async updatePost(postId, body) {
-        await this.checkIdParam(postId);
-        await this.checkBodyForUpdate(body);
+        this.checkIdParam(postId);
+        this.checkBodyForUpdate(body);
         await this.getPostById(postId);
-        await this.checkSlugExist(body.slug);
-
+        if (body.slug != null) {
+            await this.checkSlugExist(body.slug);
+        }
         return PostsModel.update({
             title: body.title,
             slug: body.slug,
@@ -265,7 +266,7 @@ class PostsService {
     }
 
     async deletePost(postId) {
-        await this.checkIdParam(postId);
+        this.checkIdParam(postId);
         const post = await this.getPostById(postId);
         await post.destroy();
         return post;
