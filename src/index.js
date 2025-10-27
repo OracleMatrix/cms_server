@@ -7,7 +7,7 @@ require('dotenv').config();
 const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
 const swaggerFile = require('./swagger-output.json');
-// const auth = require('./middlewares/auth.middleware');
+const auth = require('./middleware/auth');
 
 const port = process.env.PORT || 3000;
 
@@ -24,6 +24,7 @@ app.use(cors({
 
 // ROUTES
 app.use('/api-docs/', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+app.use(auth)
 app.use('/api/v1/', require('./routes/auth.routes'));
 app.use('/api/v1/', require('./routes/user.routes'));
 app.use('/api/v1/', require('./routes/post.routes'));
