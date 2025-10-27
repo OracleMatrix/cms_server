@@ -32,6 +32,14 @@
   "schemes": [
     "http"
   ],
+  "securityDefinitions": {
+    "apiTokenAuth": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "Authorization",
+      "description": "Enter your token directly (no Bearer prefix)"
+    }
+  },
   "paths": {
     "/auth/register": {
       "post": {
@@ -924,6 +932,9 @@
         "responses": {
           "201": {
             "description": "Created"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -958,6 +969,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -980,9 +994,17 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
     }
-  }
+  },
+  "security": [
+    {
+      "apiTokenAuth": []
+    }
+  ]
 }

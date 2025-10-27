@@ -9,17 +9,17 @@ const doc = {
     host: 'localhost:8080',
     basePath: '/api/v1',
     schemes: ['http'], // or https
-    // securityDefinitions: {
-    //     apiTokenAuth: {
-    //         type: 'apiKey',
-    //         in: 'header',
-    //         name: 'Authorization',
-    //         description: 'Enter your token directly (no Bearer prefix)'
-    //     }
-    // },
-    // security: [
-    //     { apiTokenAuth: [] }
-    // ],
+    securityDefinitions: {
+        apiTokenAuth: {
+            type: 'apiKey',
+            in: 'header',
+            name: 'Authorization',
+            description: 'Enter your token directly (no Bearer prefix)'
+        }
+    },
+    security: [
+        { apiTokenAuth: [] }
+    ],
 
     tags: [  // ⬅️ Add this section
         {
