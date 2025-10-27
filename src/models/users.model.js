@@ -1,4 +1,4 @@
-const {Model, DataTypes} = require('sequelize');
+const { Model, DataTypes } = require('sequelize');
 const bcrypt = require('bcrypt');
 module.exports = (sequelize) => {
     class UsersModel extends Model {
@@ -12,7 +12,11 @@ module.exports = (sequelize) => {
             UsersModel.hasMany(models.comments, {
                 foreignKey: 'userId',
                 as: 'comments',
-            })
+            });
+            UsersModel.hasMany(models.likes, {
+                foreignKey: 'userId',
+                as: 'likes',
+            });
         }
 
         async comparePassword(password) {
