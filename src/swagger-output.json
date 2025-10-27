@@ -23,6 +23,10 @@
     {
       "name": "Comments",
       "description": "Comments management"
+    },
+    {
+      "name": "Likes",
+      "description": "Likes management"
     }
   ],
   "schemes": [
@@ -886,6 +890,96 @@
           },
           "500": {
             "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/like": {
+      "post": {
+        "tags": [
+          "Likes"
+        ],
+        "summary": "Like a post",
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "type": "number",
+                  "example": 1
+                },
+                "postId": {
+                  "type": "number",
+                  "example": 1
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    },
+    "/unlike": {
+      "post": {
+        "tags": [
+          "Likes"
+        ],
+        "summary": "Unlike a post",
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "type": "number",
+                  "example": 1
+                },
+                "postId": {
+                  "type": "number",
+                  "example": 1
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/likes/of/post/{postId}": {
+      "get": {
+        "tags": [
+          "Likes"
+        ],
+        "summary": "Get likes by post ID",
+        "description": "",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
