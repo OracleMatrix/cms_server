@@ -28,6 +28,7 @@ app.use('/api/v1/', require('./routes/auth.routes'));
 app.use('/api/v1/', require('./routes/user.routes'));
 app.use('/api/v1/', require('./routes/post.routes'));
 app.use('/api/v1/', require('./routes/comment.routes'));
+app.use('/api/v1/', require('./routes/like.routes'));
 
 // RUN SERVER
 db.sequelize.sync().then(() => {
