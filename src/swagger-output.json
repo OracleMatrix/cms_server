@@ -622,7 +622,7 @@
         }
       }
     },
-    "/posts/{postId}/update/": {
+    "/posts/{postId}/{userId}/update/": {
       "put": {
         "tags": [
           "Posts"
@@ -632,6 +632,12 @@
         "parameters": [
           {
             "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "userId",
             "in": "path",
             "required": true,
             "type": "string"
@@ -685,7 +691,7 @@
         }
       }
     },
-    "/posts/{postId}/delete": {
+    "/posts/{postId}/{userId}/delete": {
       "delete": {
         "tags": [
           "Posts"
@@ -695,6 +701,12 @@
         "parameters": [
           {
             "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "userId",
             "in": "path",
             "required": true,
             "type": "string"
