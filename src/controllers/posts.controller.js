@@ -124,7 +124,7 @@ class PostsController {
 
     async updatePost(req, res) {
         try {
-            await postService.updatePost(req.params.postId, req.body);
+            await postService.updatePost(req.params.postId, req.params.userId, req.body);
             return res.status(200).send({ message: "Post updated successfully" });
         } catch (error) {
             console.error(`==================================\n${error}\n======================================`);
@@ -134,7 +134,7 @@ class PostsController {
 
     async deletePost(req, res) {
         try {
-            await postService.deletePost(req.params.postId);
+            await postService.deletePost(req.params.postId, req.params.userId,);
             return res.status(200).send({ message: "Post deleted successfully" });
         } catch (error) {
             console.error(`==================================\n${error}\n======================================`);

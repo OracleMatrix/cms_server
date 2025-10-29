@@ -309,6 +309,7 @@ class PostsService {
         this.checkBody(body);
         await userServices.getUsersById(authorId);
         await this.checkSlugExist(body.slug);
+        await userServices.checkUserRole(authorId, ["author", "admin"]);
 
         return await PostsModel.create({
             authorId: authorId,
@@ -322,10 +323,11 @@ class PostsService {
         });
     }
 
-    async updatePost(postId, body) {
+    async updatePost(postId, userId, body) {
         this.checkIdParam(postId);
         this.checkBodyForUpdate(body);
         await this.getPostById(postId);
+        await userServices.checkUserRole(userId, ["author", "editor", "admin"]);
         if (body.slug != null) {
             await this.checkSlugExist(body.slug);
         }
@@ -345,9 +347,10 @@ class PostsService {
         );
     }
 
-    async deletePost(postId) {
+    async deletePost(postId, userId) {
         this.checkIdParam(postId);
         const post = await this.getPostById(postId);
+        await userServices.checkUserRole(userId, ["author", "admin"]);
         await post.destroy();
         return post;
     }

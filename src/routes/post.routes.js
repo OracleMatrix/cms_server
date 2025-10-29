@@ -59,7 +59,7 @@ router.post('/posts/:authorId/create/',
     }*/
     postsController.createPost);
 
-router.put('/posts/:postId/update/',
+router.put('/posts/:postId/:userId/update/',
     // #swagger.tags = ['Posts']
     // #swagger.summary = 'Update a post by ID'
     /* #swagger.parameters['body'] = {
@@ -77,7 +77,7 @@ router.put('/posts/:postId/update/',
     }*/
     postsController.updatePost);
 
-router.delete('/posts/:postId/delete',
+router.delete('/posts/:postId/:userId/delete',
     // #swagger.tags = ['Posts']
     // #swagger.summary = 'Delete a post by ID'
     postsController.deletePost);
