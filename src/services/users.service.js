@@ -4,7 +4,7 @@ const UsersModel = db.users;
 
 class UsersService {
     async getUsersById(userId) {
-        const user = await UsersModel.findByPk(userId, {attributes: {exclude: ['passwordHash']}});
+        const user = await UsersModel.findByPk(userId, { attributes: { exclude: ['passwordHash'] } });
         if (!user) {
             const error = new Error('User not found');
             error.status = 404;
@@ -14,7 +14,7 @@ class UsersService {
     }
 
     async getUserByEmail(email) {
-        const user = await UsersModel.findOne({where: {email: email}, attributes: {exclude: ['passwordHash']}});
+        const user = await UsersModel.findOne({ where: { email: email }, attributes: { exclude: ['passwordHash'] } });
         if (!user) {
             const error = new Error('User not found with this email');
             error.status = 404;
@@ -24,7 +24,7 @@ class UsersService {
     }
 
     async getUserFullData(userId) {
-        const user = await UsersModel.findOne({where: {id: userId}});
+        const user = await UsersModel.findOne({ where: { id: userId } });
         if (!user) {
             const error = new Error('User not found');
             error.status = 404;
@@ -35,12 +35,12 @@ class UsersService {
 
     async getAllUsers(page = 1, limit = 10) {
         const offset = (page - 1) * limit;
-        const {count, rows} = await UsersModel.findAndCountAll(
+        const { count, rows } = await UsersModel.findAndCountAll(
             {
                 limit,
                 offset,
                 order: [["createdAt", "DESC"]],
-                attributes: {exclude: ['passwordHash']}
+                attributes: { exclude: ['passwordHash'] }
             }
         );
         return {
@@ -56,7 +56,7 @@ class UsersService {
 
     async deleteUser(userId) {
         await this.getUsersById(userId);
-        await UsersModel.destroy({where: {id: userId}});
+        await UsersModel.destroy({ where: { id: userId } });
     }
 
     async updateUser(userId, data) {
@@ -67,25 +67,25 @@ class UsersService {
             email: Joi.string().email().required(),
         });
 
-        const {error: paramError} = paramSchema.validate(userId);
+        const { error: paramError } = paramSchema.validate(userId);
         if (paramError) {
             const paramValidateError = new Error(paramError.details[0].message);
             paramValidateError.status = 400;
             throw paramValidateError;
         }
 
-        const {error: bodyError} = bodySchema.validate(data);
+        const { error: bodyError } = bodySchema.validate(data);
         if (bodyError) {
             const bodyValidateError = new Error(paramError.details[0].message);
             bodyValidateError.status = 400;
             throw bodyValidateError;
         }
 
-        const {userName, email} = data;
+        const { userName, email } = data;
 
         await this.getUsersById(userId);
 
-        return UsersModel.update({userName, email}, {where: {id: userId}});
+        return UsersModel.update({ userName, email }, { where: { id: userId } });
 
     }
 
@@ -96,21 +96,21 @@ class UsersService {
             newPassword: Joi.string().min(8).max(255).required(),
         });
 
-        const {error: paramError} = paramSchema.validate(userId);
+        const { error: paramError } = paramSchema.validate(userId);
         if (paramError) {
             const e = new Error(paramError.details[0].message);
             e.status = 400;
             throw e;
         }
 
-        const {error: bodyError} = bodySchema.validate(data);
+        const { error: bodyError } = bodySchema.validate(data);
         if (bodyError) {
             const e = new Error(bodyError.details[0].message);
             e.status = 400;
             throw e;
         }
 
-        const {oldPassword, newPassword} = data;
+        const { oldPassword, newPassword } = data;
         const user = await this.getUserFullData(userId);
 
         const isMatch = await user.comparePassword(oldPassword);
@@ -126,6 +126,18 @@ class UsersService {
         return user;
     }
 
+    async checkUserRole(userId, roles) {
+        const user = await this.getUsersById(userId);
+
+        const roleArray = Array.isArray(roles) ? roles : [roles];
+
+        if (!roleArray.includes(user.role)) {
+            const error = new Error(`${user.role.toUpperCase()} cannot perform this action, only ${roleArray.join(', ').toUpperCase()} can do`);
+            error.status = 403;
+            throw error;
+        }
+        return true;
+    }
 }
 
 module.exports = new UsersService();
