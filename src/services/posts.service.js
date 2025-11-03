@@ -126,7 +126,7 @@ class PostsService {
 
         const { count, rows } = await PostsModel.findAndCountAll({
             where: {
-                category: category, status: {
+                category: { [db.Sequelize.Op.like]: `%${category}%` }, status: {
                     [db.Sequelize.Op.notIn]: ['draft', 'archived']
                 }
             },
@@ -158,7 +158,7 @@ class PostsService {
         const offset = (page - 1) * limit;
         const { count, rows } = await PostsModel.findAndCountAll({
             where: {
-                tags: tag,
+                tags: { [db.Sequelize.Op.like]: `%${tag}%` },
                 status: {
                     [db.Sequelize.Op.notIn]: ['draft', 'archived']
                 }
