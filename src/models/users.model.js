@@ -17,6 +17,14 @@ module.exports = (sequelize) => {
                 foreignKey: 'userId',
                 as: 'likes',
             });
+            UsersModel.hasMany(models.follow, {
+                foreignKey: 'followerId',
+                as: 'followingList',
+            });
+            UsersModel.hasMany(models.follow, {
+                foreignKey: 'followingId',
+                as: 'followersList',
+            });
         }
 
         async comparePassword(password) {
@@ -33,6 +41,7 @@ module.exports = (sequelize) => {
             email: {
                 type: DataTypes.STRING,
                 allowNull: false,
+                unique: true,
                 validate: {
                     isEmail: true,
                 }
@@ -47,6 +56,7 @@ module.exports = (sequelize) => {
             role: {
                 type: DataTypes.ENUM('admin', 'author', 'editor', 'user'),
                 allowNull: false,
+                defaultValue: 'user'
             }
         },
         {
