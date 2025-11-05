@@ -27,6 +27,10 @@
     {
       "name": "Likes",
       "description": "Likes management"
+    },
+    {
+      "name": "Follow",
+      "description": "Follow system management"
     }
   ],
   "schemes": [
@@ -1000,6 +1004,134 @@
             "name": "postId",
             "in": "path",
             "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/follow/follow": {
+      "post": {
+        "tags": [
+          "Follow"
+        ],
+        "summary": "Follow a user",
+        "description": "",
+        "parameters": [
+          {
+            "name": "followerId",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "followingId",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/follow/unfollow": {
+      "delete": {
+        "tags": [
+          "Follow"
+        ],
+        "summary": "Unfollow a user",
+        "description": "",
+        "parameters": [
+          {
+            "name": "followerId",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "followingId",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/follow/{userId}/followers": {
+      "get": {
+        "tags": [
+          "Follow"
+        ],
+        "summary": "Get all followers of a user",
+        "description": "",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/follow/{userId}/following": {
+      "get": {
+        "tags": [
+          "Follow"
+        ],
+        "summary": "Get all follow that a user is following",
+        "description": "",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
             "type": "string"
           }
         ],

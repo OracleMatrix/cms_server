@@ -41,6 +41,10 @@ const doc = {
         {
             name: 'Likes',
             description: 'Likes management',
+        },
+        {
+            name: 'Follow',
+            description: 'Follow system management',
         }
     ]
 };
@@ -51,7 +55,8 @@ const endpointsFiles = [
     'src/routes/user.routes.js',
     'src/routes/post.routes.js',
     'src/routes/comment.routes.js',
-    'src/routes/like.routes.js'
+    'src/routes/like.routes.js',
+    'src/routes/follow.routes.js',
 ];
 
 swaggerAutogen(outputFile, endpointsFiles, doc);
