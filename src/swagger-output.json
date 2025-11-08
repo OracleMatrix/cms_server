@@ -626,6 +626,41 @@
         }
       }
     },
+    "/posts/user/followingBy/{userId}": {
+      "get": {
+        "tags": [
+          "Posts"
+        ],
+        "summary": "Get users followings posts",
+        "description": "",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/posts/{postId}/{userId}/update/": {
       "put": {
         "tags": [
