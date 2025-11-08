@@ -59,6 +59,12 @@ router.post('/posts/:authorId/create/',
     }*/
     postsController.createPost);
 
+router.get('/posts/user/followingBy/:userId',
+    // #swagger.tags = ['Posts']
+    // #swagger.summary = 'Get users followings posts'
+    postsController.getUserFollowingsPosts,
+);
+
 router.put('/posts/:postId/:userId/update/',
     // #swagger.tags = ['Posts']
     // #swagger.summary = 'Update a post by ID'
