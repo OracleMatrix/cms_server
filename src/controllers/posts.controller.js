@@ -122,6 +122,20 @@ class PostsController {
         }
     }
 
+    async getUserFollowingsPosts(req, res) {
+        try {
+            const { page, limit } = req.query;
+            const data = await postService.getUserFollowingsPosts(req.params.userId,
+                parseInt(page) || 1,
+                parseInt(limit) || 10,
+            );
+            return res.status(200).send(data);
+        } catch (error) {
+            console.error(`==================================\n${error}\n======================================`);
+            return res.status(error.status || 500).send({ message: error.message });
+        }
+    }
+
     async updatePost(req, res) {
         try {
             await postService.updatePost(req.params.postId, req.params.userId, req.body);
