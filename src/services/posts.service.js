@@ -2,6 +2,7 @@ const Joi = require("joi");
 const db = require("../models");
 const PostsModel = db.posts;
 const userServices = require("./users.service");
+const followService = require('./follow.service');
 
 class PostsService {
     checkIdParam(params) {
@@ -321,6 +322,59 @@ class PostsService {
             category: body.category,
             tags: body.tags,
         });
+    }
+
+    async getUserFollowingsPosts(userId, page = 1, limit = 10) {
+        this.checkIdParam(userId);
+        await userServices.getUsersById(userId);
+        const offset = (page - 1) * limit;
+
+        const followingData = await followService.getFollowing(userId, page, limit);
+
+        const followingUserIds = followingData.data.map(follow => follow.followingUser.id);
+
+        if (followingUserIds.length === 0) {
+            return {
+                data: [],
+                pagination: {
+                    total: 0,
+                    page,
+                    limit,
+                    totalPages: 0,
+                },
+            };
+        }
+
+        const { count, rows } = await PostsModel.findAndCountAll({
+            where: {
+                authorId: {
+                    [db.Sequelize.Op.in]: followingUserIds
+                },
+                status: {
+                    [db.Sequelize.Op.notIn]: ["draft", "archived"],
+                },
+            },
+            limit: parseInt(limit),
+            offset: offset,
+            order: [["createdAt", "DESC"]],
+            include: [
+                {
+                    model: db.users,
+                    as: "users",
+                    attributes: { exclude: ["passwordHash"] },
+                },
+            ],
+        });
+
+        return {
+            data: rows,
+            pagination: {
+                total: count,
+                page,
+                limit,
+                totalPages: Math.ceil(count / limit),
+            },
+        };
     }
 
     async updatePost(postId, userId, body) {
