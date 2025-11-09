@@ -22,7 +22,11 @@ class LikesController {
     async getLikesByPostId(req, res, next) {
         try {
             const postId = req.params.postId;
-            const likes = await likesServices.getLikesByPostId(postId);
+            const { page, limit } = req.query;
+            const likes = await likesServices.getLikesByPostId(postId,
+                parseInt(page) || 1,
+                parseInt(limit) || 10,
+            );
             res.status(200).json(likes);
         } catch (error) {
             res.status(error.status || 500).json({ message: error.message });
