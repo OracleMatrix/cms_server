@@ -72,13 +72,30 @@ class LikesService {
         return { message: 'Post unliked successfully' };
     }
 
-    async getLikesByPostId(postId) {
+    async getLikesByPostId(postId, page = 1, limit = 10) {
         this.checkParamId(postId);
         await postsService.getPostById(postId);
+        const offset = (page - 1) * limit;
 
-        const likes = await LikesModel.findAll({ where: { postId } });
+        const { count, rows } = await LikesModel.findAndCountAll({
+            where: { postId },
+            offset,
+            limit,
+            order: [["createdAt", "DESC"]],
+            include: [{
+                model: db.users,
+                as: "users",
+                attributes: { exclude: ["passwordHash"] },
+            }]
+        });
         return {
-            count: likes.length,
+            data: rows,
+            pagination: {
+                total: count,
+                page,
+                limit,
+                totalPage: Math.ceil(count / limit),
+            }
         };
     }
 
