@@ -19,7 +19,7 @@ class AuthService {
         }
         const { email, password, role } = data;
 
-        const userExists = await UsersModel.findOne({ where: { email: email, role: role } });
+        const userExists = await UsersModel.findOne({ where: { email: email } });
         if (userExists) {
             const userExistsError = new Error("User already exists");
             userExistsError.status = 400;
