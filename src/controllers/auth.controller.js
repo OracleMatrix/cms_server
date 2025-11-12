@@ -7,17 +7,17 @@ class AuthController {
             res.status(201).send(data);
         } catch (error) {
             console.error(`==================================\n${error}\n======================================`);
-            res.status(error.status || 500).json({message: error.message});
+            res.status(error.status || 500).json({ message: error.message });
         }
     }
 
     async login(req, res) {
         try {
             const data = await authServices.loginUser(req.body);
-            res.status(201).send(data);
+            res.status(200).send(data);
         } catch (error) {
             console.error(`==================================\n${error}\n======================================`);
-            res.status(error.status || 500).json({message: error.message});
+            res.status(error.status || 500).json({ message: error.message });
         }
     }
 }
