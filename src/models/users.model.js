@@ -49,9 +49,6 @@ module.exports = (sequelize) => {
             passwordHash: {
                 type: DataTypes.STRING,
                 allowNull: false,
-                validate: {
-                    len: [8, 255]
-                }
             },
             role: {
                 type: DataTypes.ENUM('admin', 'author', 'editor', 'user'),
